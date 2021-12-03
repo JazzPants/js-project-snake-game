@@ -2,6 +2,12 @@
 const snakeBackground = document.getElementById("gameCanvas"); //create variable for the "gameCanvas" element
 const snakeBackgroundCtx = gameCanvas.getContext("2d",{alpha:false}); //make the rendering context of "gameCanvas" in a 2D space
 
+
+// document.addEventListener('keydown', (e) => {
+//   console.log(e.key)
+// })
+
+
 //array with objects containing co-ordinates as elements
 let snake = [  
     {x: 200, y: 200},  //head
@@ -48,10 +54,11 @@ function clearBackground() {
 
 
 
-let changingDirection = false;
-let hasCollided = false;
+// let changingDirection = false;
+// let hasCollided = false;
 let intervalStatus;
-let gameStatus = "started";
+let gameStatus = "ended";
+let gamePaused = false;
 function gameUpdate() {
   console.log("game is on")
   if (gameStatus === "started") {
@@ -61,30 +68,27 @@ function gameUpdate() {
       drawSnake(); //draw actual snake
       moveSnake(); //move snake along visually but adding and deleting parts of it
       // gameUpdate(); //keep calling gameUpdate every 1000ms if you use setTimeout
-    }, 250)
+    }, 100)
   }
-
-
 }
 
+//pause feature
 function pauseGame(){
-  console.log("game is paused")
   clearInterval(intervalStatus)
   intervalStatus = null;
+  console.log("game is paused")
 }
-
-let gameOn = false
 document.addEventListener('keydown', (event) => {
   //  
 
-  if (event.key === " " && gameOn === false) {
+  if (event.key === " " && gamePaused === true && gameStatus === "started") {
     gameUpdate();
-    gameOn = true;
+    gamePaused = false;
     
   }
-  else if (event.key === " " && gameOn === true) {
+  else if (event.key === " " && gamePaused === false && gameStatus === "started") {
     pauseGame();
-    gameOn = false;
+    gamePaused = true;
     
   }
 }) 
@@ -93,9 +97,36 @@ document.addEventListener('keydown', (event) => {
 //collide with border
 //collide with snake own body
 function gameEnd() {
-  clearInterval(intervalStatus)
-  intervalStatus = null
+  clearInterval(intervalStatus);
+  intervalStatus = null;
+  gameStatus = "ended";
+  console.log('game end')
 }
+
+
+//reset position, clear game canvas, redraw snake
+function newGame() {
+  console.log("new game")
+  console.log(snake[0])
+    snake = [  
+      {x: 200, y: 200},  //original position
+      {x: 190, y: 200},  
+      {x: 180, y: 200},  
+      {x: 170, y: 200},  
+      {x: 160, y: 200},
+  ];
+      //make snake move the same way again
+      dx = 10; 
+      dy = 0;
+      return gameUpdate();
+}
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === "Enter" && gameStatus === "ended") {
+    gameStatus = "started"
+    return newGame();
+  }
+})
 
 
 
@@ -105,19 +136,27 @@ let dx = 10 //initial horizontal speed
 let dy = 0 //initial vertical speed
 function moveSnake() {
     const snakeHead = {x: snake[0].x + dx, y: snake[0].y + dy} //snakeHead object to move snake
+    
+    //stop reversal onto itself
     snake.unshift(snakeHead); //add new head to snake
     snake.pop(); //remove tail
+
     console.log(`x:${snakeHead.x}, y:${snakeHead.y}`)
+    
+    
+    
     const leftBorder = 0;
-    const rightBorder = snakeBackground.width; //500
-    const topBorder = snakeBackground.height; //500
+    const rightBorder = snakeBackground.width - 10; //500
+    const topBorder = snakeBackground.height - 10; //500
     const bottomBorder = 0 
+  
+  //body collide scenario
+
     
-    
-  if (snakeHead.x < leftBorder) {
-    hasCollided = true;
+
+  //border collide scenario
+  if (snakeHead.x < leftBorder || snakeHead.x > rightBorder || snakeHead.y < bottomBorder || snakeHead.y > topBorder) {
     gameStatus = "ended";
-    console.log('game end')
     return gameEnd();
     
   }
