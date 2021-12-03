@@ -59,18 +59,22 @@ function clearBackground() {
 let intervalStatus;
 let gameStatus = "ended";
 let gamePaused = false;
+let changingDirection;
 function gameUpdate() {
   console.log("game is on")
   if (gameStatus === "started") {
     intervalStatus = setInterval( () => 
     {
+      changingDirection = false; //every update allow us to turn
       clearBackground(); //clear tail trail thats left from moveSnake
       drawSnake(); //draw actual snake
       moveSnake(); //move snake along visually but adding and deleting parts of it
       // gameUpdate(); //keep calling gameUpdate every 1000ms if you use setTimeout
-    }, 100)
+      console.log(changingDirection)
+    }, 1000)
   }
 }
+ 
 
 //pause feature
 function pauseGame(){
@@ -171,7 +175,13 @@ function moveSnake() {
 //alter dx and dy based on keydown
 //prevent reverse movement by adding second condition
 function changeDirection(event) {
-  // if (changingDirection === true) return;
+  
+  //break from function if we are in the middle of "turning"
+  if (changingDirection === true) return; //break out
+  changingDirection = true;
+  console.log(changingDirection)
+  
+  //during time of this function changingDirection is true, so we break out of function and not reverse on ourselves
 
 
   //set moving states to prevent reversing
