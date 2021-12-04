@@ -17,6 +17,7 @@ let snake = [
     {x: 160, y: 200},
 ];
 
+
 //set colors for background, border, snake, snake outline
 const gameBorder = 'black';
 const gameBackground = 'grey';
@@ -51,33 +52,39 @@ function clearBackground() {
   snakeBackgroundCtx.fillRect(0, 0, snakeBackground.width, snakeBackground.height)
   snakeBackgroundCtx.strokeRect(0, 0, snakeBackground.width, snakeBackground.height) //x, y start position, x length, y length
 }
-let foodX;
-let foodY;
-let hasEatenFood = false;
-generateFood();
-let intervalStatus;
-let gameStatus = "ended";
-let gamePaused = false;
-let changingDirection;
-//make the snake update to appear moving
-function gameUpdate() {
-  console.log("game is on")
-  if (gameStatus === "started") {
-    intervalStatus = setInterval( () => 
-    {
-      changingDirection = false; //every update allow us to turn
-      clearBackground(); //clear tail trail thats left from moveSnake
-      drawSnake(); //draw actual snake
-      moveSnake(); //move snake along visually but adding and deleting parts of it
-      drawFood();
-      // gameUpdate(); //keep calling gameUpdate every 1000ms if you use setTimeout
-      // console.log(`changingDirection is ${changingDirection}`)
-    }, 75)
-    
-  }
-  
+
+//reset position, clear game canvas, redraw snake
+function newGame() {
+  console.log("new game")
+    snake = [  
+      {x: 200, y: 200},  //original position
+      {x: 190, y: 200},  
+      {x: 180, y: 200},  
+      {x: 170, y: 200},  
+      {x: 160, y: 200},
+  ];
+      //make snake move the same way again
+      dx = 10; 
+      dy = 0;
+      return gameUpdate();
 }
- 
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === "Enter" && gameStatus === "ended") {
+    gameStatus = "started"
+    generateFood();
+    return newGame();
+  }
+})  
+
+//collide with border
+//collide with snake own body
+function gameEnd() {
+  clearInterval(intervalStatus);
+  intervalStatus = null;
+  gameStatus = "ended";
+  console.log('game end')
+}
 
 //pause feature
 function pauseGame(){
@@ -100,41 +107,36 @@ document.addEventListener('keydown', (event) => {
   }
 }) 
 
-  
-//collide with border
-//collide with snake own body
-function gameEnd() {
-  clearInterval(intervalStatus);
-  intervalStatus = null;
-  gameStatus = "ended";
-  console.log('game end')
-}
+
+let foodX;
+let foodY;
+// let hasEatenFood = false;
+
+let intervalStatus;
+let gameStatus = "ended";
+let gamePaused = false;
+let changingDirection;
 
 
-//reset position, clear game canvas, redraw snake
-function newGame() {
-  console.log("new game")
-  console.log(snake[0])
-    snake = [  
-      {x: 200, y: 200},  //original position
-      {x: 190, y: 200},  
-      {x: 180, y: 200},  
-      {x: 170, y: 200},  
-      {x: 160, y: 200},
-  ];
-      //make snake move the same way again
-      dx = 10; 
-      dy = 0;
-      return gameUpdate();
-}
-
-document.addEventListener('keydown', (event) => {
-  if (event.key === "Enter" && gameStatus === "ended") {
-    gameStatus = "started"
-    return newGame();
+//make the snake update to appear moving
+function gameUpdate() {
+  console.log("game is on")
+  if (gameStatus === "started") {
+    intervalStatus = setInterval( () => 
+    {
+      changingDirection = false; //every update allow us to turn
+      clearBackground(); //clear tail trail thats left from moveSnake
+      drawSnake(); //draw actual snake
+      moveSnake(); //move snake along visually but adding and deleting parts of it
+      drawFood();
+      // gameUpdate(); //keep calling gameUpdate every 1000ms if you use setTimeout
+      // console.log(`changingDirection is ${changingDirection}`)
+    }, 150)
+    
   }
-})
-
+  
+}
+ 
 
 
 //auto-move the snake 
@@ -142,26 +144,27 @@ document.addEventListener('keydown', (event) => {
 //includes border collide scenario
 let dx = 10 //initial horizontal speed
 let dy = 0 //initial vertical speed
+let score = 0
 function moveSnake() {
     const snakeHead = {x: snake[0].x + dx, y: snake[0].y + dy} //snakeHead object to move snake
     
 
-    snake.unshift(snakeHead); //add new head to snake
+    snake.unshift(snakeHead); //add new head to snake to simulate movement
 
     //grow snake logic
     if (snake[0].x === foodX && snake[0].y === foodY) {
-      hasEatenFood = true;
+      // hasEatenFood = true;
+      console.log(`Eaten food at: ${snake[0].x}, ${snake[0].y}`) //last eaten food
+      score += 1
+      document.getElementById('score').innerHTML = `Current score: ${score}`;
       generateFood();
+      
     } else {
-      snake.pop();//remove tail continue removing tail
+      snake.pop();//continue removing tail to simulate movement
     }
 
-    console.log(`x:${snakeHead.x}, y:${snakeHead.y}`)
+    // console.log(`x:${snakeHead.x}, y:${snakeHead.y}`)
     
-    
-    
-
-
     const leftBorder = 0;
     const rightBorder = snakeBackground.width - 10; //500
     const topBorder = snakeBackground.height - 10; //500
@@ -184,7 +187,7 @@ function changeDirection(event) {
   //this is for a scenario where we might press two keys quickly in succession and the snake appears to reverse on itself
   if (changingDirection === true) return; //break out
   changingDirection = true;
-  console.log(`changingDirection is ${changingDirection}`)
+  // console.log(`changingDirection is ${changingDirection}`)
   
   //during time of this function changingDirection is true, so we break out of function and not reverse on ourselves
 
@@ -218,35 +221,37 @@ document.addEventListener('keydown', changeDirection);
 //keydown passes argument to changeDirection, to determine movement of the snake
 
 
-
-
-console.log(snakeBackground.width)
-console.log(snakeBackground.height)
 //add fruit eating
 //add highscore feature with database of high scorers
-
 //FOOD
-let hasEaten = false;
-
-
 function randomNumber() {
-  return Math.round(Math.random() * (snakeBackground.width)/10) * 10;
+  return Math.round(Math.random() * (snakeBackground.width - 10)/10) * 10; //avoid spawning below border so 490
 }
 
+// let partOfSnake = false
 function generateFood() {
   foodX = randomNumber();
-  foodY = randomNumber();
-  console.log("food location")
-  console.log(foodX, foodY)
-  console.log(snake.x, snake.y)
+  foodY = randomNumber(); 
+  console.log(`New location of food is: ${foodX}, ${foodY}`) //new location of food
+  
 
-  snake.forEach(function eatenFood(snake) {
-    if(snake.x === foodX && snake.y === foodY) {
-      hasEaten = true; //assume any co-ordinates taken up by the snake are eaten foods
-      // generateFood(); //generate a new food
-    }
-  })
+  //logic for do not spawn food on snake
+  //invoke function again if the generated food is on the snake body array
+ snake.forEach(function spawnCheck(snakePart){ 
+   if (snakePart.x === foodX && snakePart.y === foodY) {//if any body parts match our currently generated food
+    // console.log(snake)
+    console.log("Respawn food")
+    generateFood(); //generate a new food
+
+   } 
+ })
 }
+
+// function generateSecondFood() {
+//   foodX = randomNumber();
+//   foodY = randomNumber(); 
+//   console.log(`New location of SecondFood is: ${foodX}, ${foodY}`)
+// }
 
 
   //draw food to game background
@@ -258,6 +263,4 @@ function generateFood() {
   }
   
 
-
-console.log()
-console.log(Math.round(0.1))
+//check //do not spawn food on snake logic in generateFood function
