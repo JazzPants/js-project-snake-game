@@ -8,10 +8,11 @@
 <div class="main">
   <div class="column">
   <h1>Leighton's Snake Game</h1>
-  <h3>User:</h3>
-  <h3></h3>
-  <p>Current score: </p>
-  <div><p id='score'>0</p></div>
+
+  <h4>Press Enter to start a new game |</h4>
+  <h4>Use arrow keys to move the snake |</h4>
+  <h4>Press spacebar if you want to pause</h4>
+
 
       <div>
         
@@ -19,14 +20,14 @@
         <div id="enterName">
           <div id="enterNamePlacement">
 
-            <p>Enter name and click to save score</p>
-            <form action="http://localhost:3000/users" method="POST">
+            <p>Game Over</p>
+            <!-- <form action="http://localhost:3000/users" method="POST">
             <label>Username<input type="text" name="userName" id="userName"></label>
             <label name="score" id="userScore">50</label>
-            <!-- <button id ="sendButton">Send</button> -->
+            <button id ="sendButton">Send</button>
 
-            <input type="submit" name="submit" id="submit" value="Send" />
-            </form>
+            <input type="submit" name="userScore" id="submit" value="Submit" />
+            </form> -->
 
           </div>
         </div>
@@ -37,6 +38,8 @@
 
   <div class="column">
   <div class="gameSide">
+    <h3>Current score: </h3>
+    <div><h3 id='score'>0</h3></div>
     <button id="showHighscoreList">Show Highscore List</button>
     <ul id="highscoreList" style="display: none">
 
