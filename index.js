@@ -1,7 +1,9 @@
 // Your code here
+//npm install -g json-server DONE!
+//to watch server json-server --watch db.json
 const snakeBackground = document.getElementById("gameCanvas"); //create variable for the "gameCanvas" element
 const snakeBackgroundCtx = gameCanvas.getContext("2d",{alpha:false}); //make the rendering context of "gameCanvas" in a 2D space
-
+const saveNameInput = document.getElementById("enterName")
 
 // document.addEventListener('keydown', (e) => {
 //   console.log(e.key)
@@ -16,7 +18,6 @@ let snake = [
     {x: 170, y: 200},  
     {x: 160, y: 200},
 ];
-
 
 //set colors for background, border, snake, snake outline
 const gameBorder = 'black';
@@ -56,6 +57,9 @@ function clearBackground() {
 //reset position, clear game canvas, redraw snake
 function newGame() {
   console.log("new game")
+  saveNameInput.style.display = "none";
+  score = 0;
+  document.getElementById('score').innerHTML = `Current score: ${score}`;
     snake = [  
       {x: 200, y: 200},  //original position
       {x: 190, y: 200},  
@@ -83,6 +87,7 @@ function gameEnd() {
   clearInterval(intervalStatus);
   intervalStatus = null;
   gameStatus = "ended";
+  saveNameInput.style.display = "block";
   console.log('game end')
 }
 
@@ -110,12 +115,11 @@ document.addEventListener('keydown', (event) => {
 
 let foodX;
 let foodY;
-// let hasEatenFood = false;
-
 let intervalStatus;
 let gameStatus = "ended";
 let gamePaused = false;
 let changingDirection;
+let snakeCollideOnSelf = false;
 
 
 //make the snake update to appear moving
@@ -131,7 +135,7 @@ function gameUpdate() {
       drawFood();
       // gameUpdate(); //keep calling gameUpdate every 1000ms if you use setTimeout
       // console.log(`changingDirection is ${changingDirection}`)
-    }, 150)
+    }, 75)
     
   }
   
@@ -147,33 +151,43 @@ let dy = 0 //initial vertical speed
 let score = 0
 function moveSnake() {
     const snakeHead = {x: snake[0].x + dx, y: snake[0].y + dy} //snakeHead object to move snake
-    
-
     snake.unshift(snakeHead); //add new head to snake to simulate movement
-
+    
     //grow snake logic
     if (snake[0].x === foodX && snake[0].y === foodY) {
-      // hasEatenFood = true;
       console.log(`Eaten food at: ${snake[0].x}, ${snake[0].y}`) //last eaten food
       score += 1
       document.getElementById('score').innerHTML = `Current score: ${score}`;
       generateFood();
-      
     } else {
       snake.pop();//continue removing tail to simulate movement
     }
 
     // console.log(`x:${snakeHead.x}, y:${snakeHead.y}`)
-    
+    //self collide scenario
+
     const leftBorder = 0;
     const rightBorder = snakeBackground.width - 10; //500
     const topBorder = snakeBackground.height - 10; //500
     const bottomBorder = 0 
-  //border collide scenario
-  if (snakeHead.x < leftBorder || snakeHead.x > rightBorder || snakeHead.y < bottomBorder || snakeHead.y > topBorder) {
-    return gameEnd();
-    
-  }
+    //i = 4 because the snake will at minimum make a square of size 4 blocks before collding on itself
+    for (let i = 4; i < snake.length; i++)
+    {    
+      if (snake[i].x === snake[0].x && snake[i].y === snake[0].y) {
+        console.log("collided with body")
+        return gameEnd();
+    } else if (snakeHead.x < leftBorder || snakeHead.x > rightBorder || snakeHead.y < bottomBorder || snakeHead.y > topBorder) {
+      console.log("collided with border")
+      return gameEnd();
+    }
+    }
+  
+
+
+    //border collide scenario
+
+
+
 
 
 

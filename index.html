@@ -5,17 +5,42 @@
 <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
-<!-- <div id="game">
-  <div id="dodger" style="bottom: 0px; left: 180px;"></div>
-</div> -->
-<h1>Leighton's Snake Game</h1>
-<div>
-  <h2>Current score</h2>
-  <div id='score'>Current score: 0</div>
+<div class="main">
+  <div class="column">
+  <h1>Leighton's Snake Game</h1>
+
+  <div id='score'><p>Current score: 0</p></div>
+
+  <div>
+  <canvas id="gameCanvas" width="500" height="500"></canvas> 
+  <div id="enterName">
+    <div id="enterNamePlacement">
+  <p>Enter name and save score</p>
+  <input type="text" id="myText" value="Some text...">
+    </div>
+  </div>
+  </div>
+
+  </div>
+
+  <div class="column">
+  <div class="gameSide">
+    <button onClick="showHighscoreList()">Show Highscore List</button>
+    <ul id="highscoreList">
+      <li>Hello</li>
+
+    </ul>
+    
+  </div>
+
+  </div>
+
+
 </div>
 
-<canvas id="gameCanvas" width="250" height="250"></canvas> 
+
 <script type="text/javascript" src="index.js"></script>
+<script type="text/javascript" src="fetch.js"></script>
 </body>
 </html>
 

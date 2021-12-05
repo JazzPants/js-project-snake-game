@@ -1,0 +1,19 @@
+{
+  "users": [
+    {
+      "userName": "Legend27",
+      "highScore": "99",
+      "id": 1
+    },
+    {
+      "userName": "Coolkid13",
+      "highScore": "96",
+      "id": 2
+    },
+    {
+      "userName": "Usernametaken",
+      "highScore": "91",
+      "id": 3
+    }
+  ]
+}
