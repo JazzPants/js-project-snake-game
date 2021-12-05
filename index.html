@@ -8,26 +8,37 @@
 <div class="main">
   <div class="column">
   <h1>Leighton's Snake Game</h1>
+  <h3>User:</h3>
+  <h3></h3>
+  <p>Current score: </p>
+  <div><p id='score'>0</p></div>
 
-  <div id='score'><p>Current score: 0</p></div>
+      <div>
+        
+      <canvas id="gameCanvas" width="500" height="500"></canvas> 
+        <div id="enterName">
+          <div id="enterNamePlacement">
 
-  <div>
-  <canvas id="gameCanvas" width="500" height="500"></canvas> 
-  <div id="enterName">
-    <div id="enterNamePlacement">
-  <p>Enter name and save score</p>
-  <input type="text" id="myText" value="Some text...">
-    </div>
-  </div>
-  </div>
+            <p>Enter name and click to save score</p>
+            <form action="http://localhost:3000/users" method="POST">
+            <label>Username<input type="text" name="userName" id="userName"></label>
+            <label name="score" id="userScore">50</label>
+            <!-- <button id ="sendButton">Send</button> -->
+
+            <input type="submit" name="submit" id="submit" value="Send" />
+            </form>
+
+          </div>
+        </div>
+
+      </div>
 
   </div>
 
   <div class="column">
   <div class="gameSide">
-    <button onClick="showHighscoreList()">Show Highscore List</button>
-    <ul id="highscoreList">
-      <li>Hello</li>
+    <button id="showHighscoreList">Show Highscore List</button>
+    <ul id="highscoreList" style="display: none">
 
     </ul>
     

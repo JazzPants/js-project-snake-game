@@ -59,7 +59,7 @@ function newGame() {
   console.log("new game")
   saveNameInput.style.display = "none";
   score = 0;
-  document.getElementById('score').innerHTML = `Current score: ${score}`;
+  document.getElementById('score').innerHTML = `${score}`;
     snake = [  
       {x: 200, y: 200},  //original position
       {x: 190, y: 200},  
@@ -157,7 +157,7 @@ function moveSnake() {
     if (snake[0].x === foodX && snake[0].y === foodY) {
       console.log(`Eaten food at: ${snake[0].x}, ${snake[0].y}`) //last eaten food
       score += 1
-      document.getElementById('score').innerHTML = `Current score: ${score}`;
+      document.getElementById('score').innerHTML = `${score}`;
       generateFood();
     } else {
       snake.pop();//continue removing tail to simulate movement

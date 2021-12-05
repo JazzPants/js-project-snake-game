@@ -1,6 +1,6 @@
 /*
 #game {
-    background-color: #111;
+    
     height: 400px;
     margin: 0 auto;
     overflow: hidden;
@@ -16,6 +16,7 @@
 
   #gameCanvas {
     float: left;
+    background-color: rgb(122, 36, 36);
   } 
 
   .gameSide {
@@ -23,13 +24,6 @@
     float: right;
     padding-left: 100;
   }
-  
-
-  #highscoreList {
-    display: none;
-  }
-
-
 
   #enterName {
     display: none;
